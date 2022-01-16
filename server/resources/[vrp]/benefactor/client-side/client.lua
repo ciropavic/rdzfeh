@@ -72,13 +72,6 @@ end)
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- THREADOPEN
 -----------------------------------------------------------------------------------------------------------------------------------------
---AddEventHandler("benefactor:openBenefactor",function()
---	local ped = PlayerPedId()
---	if not IsPedInAnyVehicle(ped) then
---		SetNuiFocus(true,true)
---		SendNUIMessage({ action = "show" })
---	end
---end)
 Citizen.CreateThread(function()
 	SetNuiFocus(false,false)
 
