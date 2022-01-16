@@ -19,7 +19,8 @@ local localVehicles = {}
 local vehicles = {}
 local vehIds = {}
 local open = vector3(-56.58,-1097.04,26.43)
-local zone = vector3(-30.09,-1105.0,26.43)
+local zone = vector3(-56.58,-1097.04,26.43)
+--local zone = vector3(-30.09,-1105.0,26.43)
 
 local coords = {
 	[1] = { cds = vector3(-43.79,-1101.67,25.97), h = 11.34 },
@@ -51,13 +52,51 @@ AddEventHandler("benefactor:syncList",function(cars,bikes)
 	typeBikes = bikes
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
+-- LOCATEBENEFACTORPREMIUM
+-----------------------------------------------------------------------------------------------------------------------------------------
+local locateBenefactor = {
+	{ -56.58,-1097.04,26.43 }
+--	{ -29.73,-1103.8,26.43,242.97 }
+}
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREADHOVERFY
+-----------------------------------------------------------------------------------------------------------------------------------------
+Citizen.CreateThread(function()
+	local innerTable = {}
+	for k,v in pairs(locateBenefactor) do
+		table.insert(innerTable,{ v[1],v[2],v[3],2,"E","Benefactor","Pressione para abrir" })
+	end
+
+	TriggerEvent("hoverfy:insertTable",innerTable)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
 -- THREADOPEN
 -----------------------------------------------------------------------------------------------------------------------------------------
-AddEventHandler("benefactor:openBenefactor",function()
-	local ped = PlayerPedId()
-	if not IsPedInAnyVehicle(ped) then
-		SetNuiFocus(true,true)
-		SendNUIMessage({ action = "show" })
+--AddEventHandler("benefactor:openBenefactor",function()
+--	local ped = PlayerPedId()
+--	if not IsPedInAnyVehicle(ped) then
+--		SetNuiFocus(true,true)
+--		SendNUIMessage({ action = "show" })
+--	end
+--end)
+Citizen.CreateThread(function()
+	SetNuiFocus(false,false)
+
+	while true do
+		local timeDistance = 500
+		local ped = PlayerPedId()
+		if not IsPedInAnyVehicle(ped) then
+			local coords = GetEntityCoords(ped)
+			local distance = #(coords - open)
+			if distance <= 1 then
+				timeDistance = 4
+				if IsControlJustPressed(1,38) then
+					SetNuiFocus(true,true)
+					SendNUIMessage({ action = "show" })
+				end
+			end
+		end
+		Citizen.Wait(timeDistance)
 	end
 end)
 -----------------------------------------------------------------------------------------------------------------------------------------
